@@ -10,11 +10,12 @@ public class Ways {
     //конструктор Ways. Принимает локацию в виде двумерного квадратного массива целочисленных значений
     public Ways(int[][] loc) {
         this.loc = loc;
+        start();
     }
 
     //начало работы Ways. Создаёт 2 начальных пути - правый и нижний,
     //на которых вызывается метод для совершения следующего шага
-    public void start() {
+    private void start() {
         nextStep(new Way(loc[0][0]), 1, 0, 'D');
         nextStep(new Way(loc[0][0]), 0, 1, 'R');
     }
@@ -23,11 +24,11 @@ public class Ways {
     // и записывает его в путь. Если возможно два пути движения - правый путь создаёт копию пути (Way) и пишет в неё.
     private void nextStep(Way way, int nextLine, int nextColumn, char turn){
         way.add(loc[nextLine][nextColumn], turn);
-        if (nextLine == loc.length - 1 && nextColumn == loc[0].length - 1) {
+        if (nextLine == loc.length - 1 && nextColumn == loc[nextLine].length - 1) {
             way.safeToWays();
         } else if (nextLine == loc.length - 1) {
             nextStep(way, nextLine, nextColumn+1, 'R');
-        } else if (nextColumn == loc[0].length - 1) {
+        } else if (nextColumn == loc[nextLine].length - 1) {
             nextStep(way, nextLine+1, nextColumn, 'D');
         } else {
             nextStep(new Way(way), nextLine, nextColumn+1, 'R');
@@ -35,15 +36,14 @@ public class Ways {
         }
     };
 
-    public void getResult() {
-        System.out.println(ways);
+    public String getResult() {
         int result = 0;
-        for (Way way: ways) {
-            if (result < way.SumResult) {
-                result = way.SumResult;
-                System.out.println(way);
+        for (int i = 1; i < ways.size() - 1; i++) {
+            if (ways.get(result).SumResult < ways.get(i).SumResult) {
+                result = i;
             }
         }
+        return ways.get(result).toString();
     }
 
     public int getNumberOfWays() {
